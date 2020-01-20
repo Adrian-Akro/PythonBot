@@ -6,6 +6,7 @@ from commands.wikipedia import Wikipedia
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
+language = os.getenv('BOT_LANG')
 bot = commands.Bot(command_prefix='.')
 
 @bot.event
@@ -14,14 +15,18 @@ async def on_ready():
 
 @bot.command(name='wikipedia')
 async def wikipedia(ctx, *args):
-    lookup_string = ''.join([a for a in args])
-    wikipedia = Wikipedia(lookup_string)
-    embed = Embed()
-    embed.title = lookup_string
-    embed.description = wikipedia.get_summary()
-    embed.url = wikipedia.url
-    embed.set_image(url=wikipedia.get_image())
-    print(ctx.message.author, 'sent command wikipedia with term', lookup_string)
-    await ctx.send(embed=embed)
+    lookup_string = ' '.join([a for a in args])
+    try:
+        print(ctx.message.author, 'sent command wikipedia with term', lookup_string)
+        wikipedia = Wikipedia(language, lookup_string)
+        embed = Embed(  
+                title=wikipedia.get_title(), 
+                description=wikipedia.get_summary(), 
+                url=wikipedia.page_url
+            )
+        embed.set_image(url=wikipedia.get_image())
+        await ctx.send(embed=embed)
+    except AttributeError:
+        await ctx.send('The term query did not return any results')
 
 bot.run(token)
