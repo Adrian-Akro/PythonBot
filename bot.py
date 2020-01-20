@@ -1,4 +1,5 @@
 import os
+from discord import Embed
 from discord.ext import commands
 from dotenv import load_dotenv
 from commands.wikipedia import Wikipedia
@@ -15,8 +16,12 @@ async def on_ready():
 async def wikipedia(ctx, *args):
     lookup_string = ''.join([a for a in args])
     wikipedia = Wikipedia(lookup_string)
-    response = wikipedia.get_summary()
+    embed = Embed()
+    embed.title = lookup_string
+    embed.description = wikipedia.get_summary()
+    embed.url = wikipedia.url
+    embed.set_image(url=wikipedia.get_image())
     print(ctx.message.author, 'sent command wikipedia with term', lookup_string)
-    await ctx.send(response)
+    await ctx.send(embed)
 
 bot.run(token)

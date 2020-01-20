@@ -15,6 +15,11 @@ class Wikipedia:
             return text[0:247] + '...'
         return text
 
+    def get_image(self):
+        summary_container = self.__soup.find(id='mw-content-text')
+        src = summary_container.find('img').get('src')
+        return src
+
     @staticmethod
     def url_en():
         return 'https://en.wikipedia.org/wiki/'
