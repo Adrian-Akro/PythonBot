@@ -22,6 +22,6 @@ async def wikipedia(ctx, *args):
     embed.url = wikipedia.url
     embed.set_image(url=wikipedia.get_image())
     print(ctx.message.author, 'sent command wikipedia with term', lookup_string)
-    await ctx.send(embed)
+    await ctx.send(embed=embed)
 
 bot.run(token)
